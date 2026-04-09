@@ -112,4 +112,65 @@ body {
   color: #666666;
 }
 
+.pomodoro-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  height: 100%;
+}
+
+.pomodoro-title {
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.pomodoro-timer {
+  font-size: 48px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.pomodoro-session-label {
+  font-size: 13px;
+  color: #aaaaaa;
+}
+
+.pomodoro-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-start {
+  padding: 8px 24px;
+  background: #4ade80;
+  color: #0f0f0f;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-reset {
+  padding: 8px 24px;
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.pomodoro-info {
+  display: flex;
+  gap: 24px;
+}
+
+.pomodoro-info span {
+  font-size: 12px;
+  color: #666666;
+}
+
+
 

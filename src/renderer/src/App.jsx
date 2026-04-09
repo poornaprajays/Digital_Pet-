@@ -1,4 +1,5 @@
 import Pet from './components/Pet'
+import Goals from './components/Goals'
 
 function App() {
   return (
@@ -7,7 +8,7 @@ function App() {
         <h1>DigitalPet</h1>
       </header>
       <main className="main-content">
-        <section className="column">Goals</section>
+        <section className="column"><Goals /></section>
         <section className="column">Pomodoro</section>
         <section className="column"><Pet state="idle" /></section>
       </main>

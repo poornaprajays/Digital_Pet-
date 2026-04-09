@@ -1,3 +1,5 @@
+import Pet from './components/Pet'
+
 function App() {
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -7,7 +9,7 @@ function App() {
       <main className="main-content">
         <section className="column">Goals</section>
         <section className="column">Pomodoro</section>
-        <section className="column">Pet</section>
+        <section className="column"><Pet state="idle" /></section>
       </main>
     </div>
   )

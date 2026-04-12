@@ -1,5 +1,5 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import db from './database.js'
+import db, { getTodayGoals, upsertGoal, updateGoalProgress } from './database.js'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -36,6 +36,26 @@ function createWindow() {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 }
+
+// IPC Handlers for Goals
+ipcMain.handle('goals:getToday', () => {
+  const today = new Date().toISOString().split('T')[0]
+  return getTodayGoals(today)
+})
+
+ipcMain.handle('goals:init', () => {
+  const today = new Date().toISOString().split('T')[0]
+  upsertGoal('coding', 'GitHub Commits', 5, 0, today)
+  upsertGoal('dsa', 'DSA Problems', 3, 0, today)
+  upsertGoal('study', 'Study Time (hrs)', 4, 0, today)
+  return getTodayGoals(today)
+})
+
+ipcMain.handle('goals:updateProgress', (_, id, progress) => {
+  updateGoalProgress(id, progress)
+  const today = new Date().toISOString().split('T')[0]
+  return getTodayGoals(today)
+})
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

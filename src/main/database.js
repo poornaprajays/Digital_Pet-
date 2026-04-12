@@ -20,7 +20,8 @@ db.exec(`
     title TEXT,
     target INTEGER,
     progress INTEGER DEFAULT 0,
-    date TEXT
+    date TEXT,
+    UNIQUE(type, date)
   );
 
   CREATE TABLE IF NOT EXISTS hearts (
@@ -36,5 +37,21 @@ db.exec(`
     type TEXT
   );
 `)
+
+export const getTodayGoals = (date) => {
+  return db.prepare('SELECT * FROM goals WHERE date = ?').all(date)
+}
+
+export const upsertGoal = (type, title, target, progress, date) => {
+  return db.prepare(`
+    INSERT INTO goals (type, title, target, progress, date)
+    VALUES (?, ?, ?, ?, ?)
+    ON CONFLICT(type, date) DO NOTHING
+  `).run(type, title, target, progress, date)
+}
+
+export const updateGoalProgress = (id, progress) => {
+  return db.prepare('UPDATE goals SET progress = ? WHERE id = ?').run(progress, id)
+}
 
 export default db

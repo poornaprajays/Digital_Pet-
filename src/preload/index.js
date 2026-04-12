@@ -1,8 +1,14 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
-const api = {}
+const api = {
+  goals: {
+    getToday: () => ipcRenderer.invoke('goals:getToday'),
+    init: () => ipcRenderer.invoke('goals:init'),
+    updateProgress: (id, progress) => ipcRenderer.invoke('goals:updateProgress', id, progress)
+  }
+}
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
@@ -10,11 +16,13 @@ const api = {}
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI)
+    contextBridge.exposeInMainWorld('electronAPI', api)
     contextBridge.exposeInMainWorld('api', api)
   } catch (error) {
     console.error(error)
   }
 } else {
   window.electron = electronAPI
+  window.electronAPI = api
   window.api = api
 }

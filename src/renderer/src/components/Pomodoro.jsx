@@ -1,9 +1,14 @@
 import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Play, Pause, RotateCcw, Coffee, Target } from 'lucide-react'
 
 const Pomodoro = () => {
   const [timeLeft, setTimeLeft] = useState(25 * 60)
   const [isRunning, setIsRunning] = useState(false)
   const [sessionType, setSessionType] = useState('focus')
+
+  const totalTime = sessionType === 'focus' ? 25 * 60 : 5 * 60
+  const progress = ((totalTime - timeLeft) / totalTime) * 100
 
   useEffect(() => {
     let interval = null
@@ -34,10 +39,7 @@ const Pomodoro = () => {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
   }
 
-  const handleStartPause = () => {
-    setIsRunning(!isRunning)
-  }
-
+  const handleStartPause = () => setIsRunning(!isRunning)
   const handleReset = () => {
     setIsRunning(false)
     setSessionType('focus')
@@ -45,23 +47,79 @@ const Pomodoro = () => {
   }
 
   return (
-    <div className="pomodoro-container">
-      <h2 className="pomodoro-title">Focus Timer</h2>
-      <div className="pomodoro-timer">{formatTime(timeLeft)}</div>
-      <div className="pomodoro-session-label">
-        {sessionType === 'focus' ? 'Focus Session' : 'Break Session'}
+    <div className="pomodoro-content">
+      <div className="timer-display">
+        <svg className="timer-circle" width="240" height="240">
+          <circle
+            cx="120"
+            cy="120"
+            r="110"
+            fill="none"
+            stroke="rgba(255, 255, 255, 0.05)"
+            strokeWidth="8"
+          />
+          <motion.circle
+            cx="120"
+            cy="120"
+            r="110"
+            fill="none"
+            stroke={sessionType === 'focus' ? '#7c4dff' : '#00d2ff'}
+            strokeWidth="8"
+            strokeDasharray="691.15"
+            animate={{ strokeDashoffset: 691.15 - (691.15 * progress) / 100 }}
+            transition={{ duration: 1, ease: "linear" }}
+            strokeLinecap="round"
+          />
+        </svg>
+        
+        <div className="timer-text">{formatTime(timeLeft)}</div>
+        <div className="timer-status">
+          {sessionType === 'focus' ? (
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key="focus"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+              >
+                <Target size={14} /> Focus
+              </motion.div>
+            </AnimatePresence>
+          ) : (
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key="break"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+              >
+                <Coffee size={14} /> Break
+              </motion.div>
+            </AnimatePresence>
+          )}
+        </div>
       </div>
-      <div className="pomodoro-buttons">
-        <button className="btn-start" onClick={handleStartPause}>
-          {isRunning ? 'Pause' : 'Start'}
-        </button>
-        <button className="btn-reset" onClick={handleReset}>
-          Reset
-        </button>
-      </div>
-      <div className="pomodoro-info">
-        <span>Focus: 25 min</span>
-        <span>Break: 5 min</span>
+
+      <div className="timer-controls">
+        <motion.button 
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="control-btn" 
+          onClick={handleReset}
+        >
+          <RotateCcw size={20} />
+        </motion.button>
+        
+        <motion.button 
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="control-btn primary" 
+          onClick={handleStartPause}
+        >
+          {isRunning ? <Pause size={24} fill="white" /> : <Play size={24} fill="white" style={{ marginLeft: '4px' }} />}
+        </motion.button>
       </div>
     </div>
   )

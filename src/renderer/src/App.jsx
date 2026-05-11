@@ -9,6 +9,9 @@ function App() {
     <div className="app-container">
       <header className="top-bar">
         <h1>DigitalPet.</h1>
+        <div className="quote-container">
+          <p className="quote-text">"Life is beautiful if u know how to live it"</p>
+        </div>
       </header>
       
       <main className="main-content">
